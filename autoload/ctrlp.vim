@@ -1001,15 +1001,15 @@ fu! ctrlp#acceptfile(...)
 	cal s:PrtExit()
 	let tail = s:tail()
 	let j2l = atl != '' ? atl : matchstr(tail, '^ +\zs\d\+$')
-	if ( s:jmptobuf =~ md || ( s:jmptobuf && md =~ '[et]' ) ) && bufnr > 0
-		\ && !( md == 'e' && bufnr == bufnr('%') )
+	if ( s:jmptobuf =~? md || ( s:jmptobuf && md =~? '[et]' ) ) && bufnr > 0
+		\ && !( md ==? 'e' && bufnr == bufnr('%') )
 		let [jmpb, bufwinnr] = [1, bufwinnr(bufnr)]
 		let buftab = ( s:jmptobuf =~# '[tTVH]' || s:jmptobuf > 1 )
 			\ ? s:buftab(bufnr, md) : [0, 0]
 	en
 	" Switch to existing buffer or open new one
 	if exists('jmpb') && bufwinnr > 0
-		\ && !( md == 't' && ( s:jmptobuf !~# toupper(md) || buftab[0] ) )
+		\ && !( md ==? 't' && ( s:jmptobuf !~# toupper(md) || buftab[0] ) )
 		exe bufwinnr.'winc w'
 		if j2l | cal ctrlp#j2l(j2l) | en
 	elsei exists('jmpb') && buftab[0]
@@ -1021,9 +1021,9 @@ fu! ctrlp#acceptfile(...)
 		" Determine the command to use
 		let useb = bufnr > 0 && buflisted(bufnr) && ( empty(tail) || useb )
 		let cmd =
-			\ md == 't' || s:splitwin == 1 ? ( useb ? 'tab sb' : 'tabe' ) :
-			\ md == 'h' || s:splitwin == 2 ? ( useb ? 'sb' : 'new' ) :
-			\ md == 'v' || s:splitwin == 3 ? ( useb ? 'vert sb' : 'vne' ) :
+			\ md ==? 't' || s:splitwin == 1 ? ( useb ? 'tab sb' : 'tabe' ) :
+			\ md ==? 'h' || s:splitwin == 2 ? ( useb ? 'sb' : 'new' ) :
+			\ md ==? 'v' || s:splitwin == 3 ? ( useb ? 'vert sb' : 'vne' ) :
 			\ call('ctrlp#normcmd', useb ? ['b', 'bo vert sb'] : ['e'])
 		" Reset &switchbuf option
 		let [swb, &swb] = [&swb, '']
@@ -1061,7 +1061,7 @@ endf
 
 fu! s:AcceptSelection(action)
 	let [md, icr] = [a:action[0], match(a:action, 'r') >= 0]
-	let subm = icr || ( !icr && md == 'e' )
+	let subm = icr || ( !icr && md ==? 'e' )
 	if !subm && s:OpenMulti(md) != -1 | retu | en
 	let str = s:getinput()
 	if subm | if s:SpecInputs(str) | retu | en | en
